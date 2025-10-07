@@ -15,6 +15,24 @@
     </header>
     <main>
 
+        <table id="medicineTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price
+                        <span id="sortOptions">
+                            <button class="sortBtn" id="sortPriceBtn">Sort</button>
+                            <button class="sortBtn optionBtn" id="ascendingBtn" style="display: none;">Ascending</button>
+                            <button class="sortBtn optionBtn" id="descendingBtn" style="display: none;">Descending</button>
+                            <button class="sortBtn optionBtn" id="defaultBtn" style="display: none;">Clear Sort</button>
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be inserted here by script.js -->
+            </tbody>
+        </table>
     </main>
     <script src="script.js"></script>
 </body>

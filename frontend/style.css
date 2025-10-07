@@ -30,3 +30,52 @@ body {
 }
 
 /* ---- Your custom styles below ---- */
+
+#medicineTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+}
+
+#medicineTable th, #medicineTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 30%;
+
+}
+
+#medicineTable th {
+    background-color: #f2f2f2;
+    text-align: left;
+    height: 60px;
+    vertical-align: middle;
+    position: relative;
+}
+
+#medicineTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.sortBtn {
+    cursor: pointer;
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+
+.sortBtn:hover {
+    background-color: darkblue;
+}
+
+#sortOptions {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+}
