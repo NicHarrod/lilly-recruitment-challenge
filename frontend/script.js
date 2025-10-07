@@ -108,6 +108,40 @@ medSubmit.addEventListener("click", () => {
     priceInput.value = '';
 });
 
+let updateButton = document.getElementsByClassName("updateBtn");
+updateButton[0].addEventListener("click", () => {
+    //get all vals of table
+    let names = document.getElementsByClassName("nameCell");
+    let prices = document.getElementsByClassName("priceCell");
+    let updatedMeds = [];
+    //compare updated values to old values, for any changes, add to updatedMeds
+    for (let i = 0; i < names.length; i++) {
+        let name = names[i].innerText;
+        let price = parseFloat(prices[i].innerText.replace('$', ''));
+        if (name !== medicineData[i].name || price !== medicineData[i].price) {
+            updatedMeds.push({name: name, price: price});
+        }
+}
+//send updated meds to backend by iterating thru and sending req each time
+    updatedMeds.forEach(med => {
+        const formData = new FormData();
+        formData.append('name', med.name);
+        formData.append('price', med.price);
+        fetch('http://localhost:8000/update', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+          .then(data => {
+              console.log('Success:', data);
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+          });
+    });
+    //refetch data to update table
+    fetchMedicineData();
+});
+
 function buildTable(data = medicineData) {
     console.log(data)
     //clear table
@@ -122,13 +156,73 @@ function buildTable(data = medicineData) {
         // Each medicine has name and price properties and class
         let row = tbody.insertRow();
         row.classList.add("medicineRow");
+        
         let nameCell = row.insertCell(0);
         nameCell.classList.add("nameCell");
         let priceCell = row.insertCell(1);
         priceCell.classList.add("priceCell");
         nameCell.innerHTML = medicine.name || "N/A";
         priceCell.innerHTML = medicine.price !== null ? `$${medicine.price.toFixed(2)}` : "N/A";   
-            });
-        };
+        
+        // Make cells editable on click
+        makeEditable(nameCell, 'text');
+        makeEditable(priceCell, 'price');
+    });
+};
+
+function makeEditable(cell, type) {
+    cell.addEventListener('click', function() {
+        // Don't make it editable if it's already being edited
+        if (cell.querySelector('input')) return;
+        
+        const originalValue = cell.innerText;
+        const input = document.createElement('input');
+        
+        if (type === 'price') {
+            input.type = 'number';
+            input.step = '0.01';
+            input.value = originalValue.replace('$', '');
+        } else {
+            input.type = 'text';
+            input.value = originalValue;
+        }
+        
+        input.style.width = '100%';
+        input.style.border = 'none';
+        input.style.background = 'transparent';
+        input.style.fontSize = 'inherit';
+        
+        // Replace cell content with input
+        cell.innerHTML = '';
+        cell.appendChild(input);
+        input.focus();
+        input.select();
+        
+        // Handle saving the edit
+        function saveEdit() {
+            let newValue = input.value;
+            if (type === 'price') {
+                const numValue = parseFloat(newValue);
+                if (!isNaN(numValue)) {
+                    cell.innerHTML = `$${numValue.toFixed(2)}`;
+                } else {
+                    cell.innerHTML = originalValue; // Revert if invalid
+                }
+            } else {
+                cell.innerHTML = newValue || originalValue; // Revert if empty
+            }
+        }
+        
+        // Save on Enter key or blur (losing focus)
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                saveEdit();
+            } else if (e.key === 'Escape') {
+                cell.innerHTML = originalValue; // Cancel edit
+            }
+        });
+    });
+}
 
 fetchMedicineData();

@@ -79,3 +79,13 @@ body {
     align-items: center;
     margin-left: 10px;
 }
+
+/* Editable cell styles */
+.nameCell, .priceCell {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nameCell:hover, .priceCell:hover {
+    background-color: #e6f3ff;
+}
