@@ -14,7 +14,12 @@
         <h1>Medicine Tracker</h1>
     </header>
     <main>
-
+                <button id="medAdd">Add Medicine</button>
+                <div id="medForm" style="display: none;">
+                    <input type="text" id="medName" placeholder="Medicine Name">
+                    <input type="number" id="medPrice" placeholder="Medicine Price">
+                    <button id="medSubmit">Add Medicine</button>
+                </div>
         <table id="medicineTable">
             <thead>
                 <tr>
@@ -28,7 +33,9 @@
                         </span>
                     </th>
                 </tr>
+
             </thead>
+
             <tbody>
                 <!-- Rows will be inserted here by script.js -->
             </tbody>

@@ -14,9 +14,10 @@ medicineData = [];
 // base table to clone
 let baseTable = document.getElementById("medicineTable");
 
-fetch('http://localhost:8000/medicines').then(response => response.json())
-    .then(data => {
-        medicineData = data.medicines;
+function fetchMedicineData() {
+    fetch('http://localhost:8000/medicines').then(response => response.json())
+        .then(data => {
+            medicineData = data.medicines;
 
         buildTable();
     }).catch(error => {
@@ -24,6 +25,7 @@ fetch('http://localhost:8000/medicines').then(response => response.json())
         buildTable();
     });
 
+}
 let sortBtn = document.getElementById("sortPriceBtn");
 sortBtn.addEventListener("click", () => {
     let btns = document.getElementsByClassName("optionBtn");
@@ -69,6 +71,43 @@ defButton.addEventListener("click", () => {
     sortBtn.click();
 });
 
+let addMedButton = document.getElementById("medAdd");
+let medForm = document.getElementById("medForm");
+let medSubmit = document.getElementById("medSubmit");
+addMedButton.addEventListener("click", () => {
+    if (medForm.style.display === "none") {
+        medForm.style.display = "block";
+    } else {
+        medForm.style.display = "none";
+    }
+});
+
+medSubmit.addEventListener("click", () => {
+    let nameInput = document.getElementById("medName");
+    let priceInput = document.getElementById("medPrice");
+
+    // Create FormData object for form submission
+    const formData = new FormData();
+    formData.append('name', nameInput.value);
+    formData.append('price', parseFloat(priceInput.value));
+
+    fetch('http://localhost:8000/create', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+      .then(data => {
+          console.log('Success:', data);
+          fetchMedicineData();
+      })
+      .catch((error) => {
+          console.error('Error:', error);
+      });
+
+    // Clear input fields
+    nameInput.value = '';
+    priceInput.value = '';
+});
+
 function buildTable(data = medicineData) {
     console.log(data)
     //clear table
@@ -92,3 +131,4 @@ function buildTable(data = medicineData) {
             });
         };
 
+fetchMedicineData();
