@@ -11,10 +11,12 @@ dummy = {
         { "name": "Dummy Magicure", "price": 200.0 }]
 }
 
-
+// Global Var
 medicineData = [];
+
 // Base table to clone
 let baseTable = document.getElementById("medicineTable");
+
 // Fetch data from API
 function fetchMedicineData() {
     fetch('http://localhost:8000/medicines').then(response => response.json())
@@ -177,11 +179,9 @@ avgButton.addEventListener("click", () => {
             console.log("Error: ",error)
             
         });
-    });
+});
 
-
-
-
+// Building Table Function and Helpers
 function buildTable(data = medicineData) {
     console.log(data)
     // Clear table
@@ -289,6 +289,7 @@ function makeEditable(cell, type) {
     });
 }
 
+// Essentially a main call
 fetchMedicineData();
 
 
