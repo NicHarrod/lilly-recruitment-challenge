@@ -14,16 +14,22 @@
         <h1>Medicine Tracker</h1>
     </header>
     <main>
-                <button id="medAdd">Add Medicine</button>
-                <div id="medForm" style="display: none;">
-                    <input type="text" id="medName" placeholder="Medicine Name">
-                    <input type="number" id="medPrice" placeholder="Medicine Price">
-                    <button id="medSubmit">Add Medicine</button>
+            <div id="controls">
+                <div id ="addMedContainer">
+                    <button id="medAdd">Add Medicine</button>
+                    <div id="medForm" style="display: none;">
+                        <input type="text" id="medName" placeholder="Medicine Name">
+                        <input type="number" id="medPrice" placeholder="Medicine Price">
+                        <button id="medSubmit">Add Medicine</button>
+                    </div>
                 </div>
+
+                <button class="updateBtn">Update Table</button>
+            </div>
         <table id="medicineTable">
             <thead>
                 <tr>
-                    <th>Name <button class="updateBtn">Update</button></th>
+                    <th>Name </th>
                     <th>Price
                         <span id="sortOptions">
                             <button class="sortBtn" id="sortPriceBtn">Sort</button>
@@ -40,6 +46,10 @@
                 <!-- Rows will be inserted here by script.js -->
             </tbody>
         </table>
+        <div id="averageContainer">
+            <button id="avgBtn">Get Average Price</button>
+            <div id="avgResult" style="display: none;"></div>
+        </div>
     </main>
     <script src="script.js"></script>
 </body>

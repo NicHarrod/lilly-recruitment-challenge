@@ -10,12 +10,12 @@ dummy = {
         { "name": "Dummy Synthomaxi", "price": 14.99 },
         { "name": "Dummy Magicure", "price": 200.0 }]
 }
-// fetch data from api
+
 
 medicineData = [];
-// base table to clone
+// Base table to clone
 let baseTable = document.getElementById("medicineTable");
-
+// Fetch data from API
 function fetchMedicineData() {
     fetch('http://localhost:8000/medicines').then(response => response.json())
         .then(data => {
@@ -28,13 +28,14 @@ function fetchMedicineData() {
         });
 
 }
+// Event listeners for buttons
 let sortBtn = document.getElementById("sortPriceBtn");
 sortBtn.addEventListener("click", () => {
     let btns = document.getElementsByClassName("optionBtn");
     console.log(btns);
     for (let btn of btns) {
         console.log(btn.style.display);
-        //invert display property
+        // Invert display property
         if (btn.style.display === "inline-block") {
             btn.style.display = "none";
         } else {
@@ -45,19 +46,19 @@ sortBtn.addEventListener("click", () => {
 
 let ascButton = document.getElementById("ascendingBtn");
 ascButton.addEventListener("click", () => {
-    //updating table and keeping old data
-    //to revert back to default
+
+    // Updating table and keeping old data in order to revert back to default
     let old = medicineData.slice();
     medicineData.sort((a, b) => a.price - b.price);
     let newData = medicineData.slice();
     medicineData = old;
     buildTable(newData);
 });
+
 let descButton = document.getElementById("descendingBtn");
 descButton.addEventListener("click", () => {
 
-    //updating table and keeping old data
-    //to revert back to default
+    // Updating table and keeping old data in order to revert back to default
     let old = medicineData.slice();
     medicineData.sort((a, b) => b.price - a.price);
     let newData = medicineData.slice();
@@ -67,15 +68,16 @@ descButton.addEventListener("click", () => {
 
 let defButton = document.getElementById("defaultBtn");
 defButton.addEventListener("click", () => {
-    //because medicineData is still the original unsorted data
+    // Because medicineData is still the original unsorted data
     buildTable();
-    //remove filter buttons for neatness
+    // Remove filter buttons for neatness
     sortBtn.click();
 });
 
 let addMedButton = document.getElementById("medAdd");
 let medForm = document.getElementById("medForm");
 let medSubmit = document.getElementById("medSubmit");
+
 addMedButton.addEventListener("click", () => {
     if (medForm.style.display === "none") {
         medForm.style.display = "block";
@@ -85,9 +87,13 @@ addMedButton.addEventListener("click", () => {
 });
 
 medSubmit.addEventListener("click", () => {
+
     let nameInput = document.getElementById("medName");
     let priceInput = document.getElementById("medPrice");
-
+    if (nameInput.value.trim() === '' || priceInput.value.trim() === '' || isNaN(priceInput.value)) {
+        alert("Please enter a valid name and price.");
+        return;
+    }
     // Create FormData object for form submission
     const formData = new FormData();
     formData.append('name', nameInput.value);
@@ -112,12 +118,12 @@ medSubmit.addEventListener("click", () => {
 
 let updateButton = document.getElementsByClassName("updateBtn");
 updateButton[0].addEventListener("click", () => {
-    //get all vals of table
+    // Get all vals of table
     let names = document.getElementsByClassName("nameCell");
 
 
     let prices = document.getElementsByClassName("priceCell");
-    //put names and prices into single array
+    // Put names and prices into single array
     let medicines = [];
 
     for (let i = 0; i < names.length; i++) {
@@ -153,13 +159,32 @@ updateButton[0].addEventListener("click", () => {
                 console.error('Error:', error);
             });
     });
-    //refetch data to update table
+    // Refetch data to update table
     fetchMedicineData();
 });
 
+let avgButton = document.getElementById("avgBtn");
+let avgResult = document.getElementById("avgResult");
+avgButton.addEventListener("click", () => {
+
+    avgResult.style.display = "block";
+    fetch('http://localhost:8000/average').then(response => response.json())
+        .then(data => {
+
+           avgResult.innerHTML=`$${data.average_price.toFixed(2)}`
+
+        }).catch(error => {
+            console.log("Error: ",error)
+            
+        });
+    });
+
+
+
+
 function buildTable(data = medicineData) {
     console.log(data)
-    //clear table
+    // Clear table
     let table = document.getElementById("medicineTable");
     let tbody = table.querySelector('tbody');
 
@@ -172,15 +197,39 @@ function buildTable(data = medicineData) {
         let row = tbody.insertRow();
         row.classList.add("medicineRow");
 
+
         let nameCell = row.insertCell(0);
         nameCell.classList.add("nameCell");
         let priceCell = row.insertCell(1);
         priceCell.classList.add("priceCell");
-        nameCell.innerHTML = medicine.name || "N/A";
+        nameCell.innerHTML = `<div class="nameCell" id="${medicine.name}">${medicine.name || "N/A"} <button class="deleteBtn" id="del_${medicine.name}">Delete</button> </div>`;
+
         priceCell.innerHTML = medicine.price !== null ? `$${medicine.price.toFixed(2)}` : "N/A";
 
-        // Make cells editable on click
+        // Add delete button event listener
+        const deleteBtn = nameCell.querySelector('.deleteBtn');
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent cell editing when clicking delete
+            let medName = medicine.name;
+            console.log('Deleting:', medName);
+            
+            const formData = new FormData();
+            formData.append('name', medName);
+            
+            fetch('http://localhost:8000/delete', {
+                method: 'DELETE',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    fetchMedicineData();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
 
+        // Make cells editable on click
         makeEditable(priceCell, 'price');
     });
 };
@@ -241,3 +290,5 @@ function makeEditable(cell, type) {
 }
 
 fetchMedicineData();
+
+

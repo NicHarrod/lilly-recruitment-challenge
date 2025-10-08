@@ -126,5 +126,18 @@ def delete_med(name: str = Form(...)):
 
 # Add your average function here
 
+@app.get("/average")
+def get_average_price():
+    """
+    This function calculates the average price of all medicines.
+    Returns:
+        dict: A dictionary containing the average price
+    """
+    with open('data.json') as meds:
+        data = json.load(meds)
+        prices = [med['price'] for med in data["medicines"] if med['price'] is not None]
+        average = sum(prices) / len(prices) if prices else 0
+        return {"average_price": average}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

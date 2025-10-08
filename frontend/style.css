@@ -35,15 +35,15 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-
+    table-layout: fixed;
 }
 
 #medicineTable th, #medicineTable td {
     border: 1px solid #ddd;
     padding: 8px;
-    width: 30%;
-
 }
+
+
 
 #medicineTable th {
     background-color: #f2f2f2;
@@ -59,7 +59,7 @@ body {
 
 .sortBtn {
     cursor: pointer;
-    background-color: blue;
+    background-color: rgb(12, 198, 211);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -69,15 +69,16 @@ body {
 
 
 .sortBtn:hover {
-    background-color: darkblue;
+    background-color: rgb(7, 127, 135);
 }
 
 #sortOptions {
     display: inline-flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 5px;
     align-items: center;
     margin-left: 10px;
+    white-space: nowrap;
 }
 
 /* Editable cell styles */
@@ -88,4 +89,65 @@ body {
 
 .priceCell:hover {
     background-color: #e6f3ff;
+}
+
+/* I want the children of controls to be separated on either side of the page */
+#controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nameCell{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.deleteBtn {
+    cursor: pointer;
+    background-color: rgb(206, 44, 21);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+.deleteBtn:hover {
+    background-color: rgb(150, 30, 15);
+}
+
+.updateBtn {
+    cursor: pointer;
+    background-color: rgb(44, 206, 21);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+#addMedContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+#medAdd, #medSubmit{
+    cursor: pointer;
+    background-color: rgb(12, 198, 211);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+#medAdd:hover , #medSubmit:hover{
+    background-color: rgb(7, 127, 135);
 }
